@@ -48,6 +48,9 @@ express()
   // Delete a specific reservation
   .delete("/delete-reservation/:id", deleteReservation)
 
+  // Fully update a reservation
+  .put("/reservation-update/:id", updateReservation)
+
   // add new endpoints here ☝️
   // ---------------------------------
   // Nothing to modify below this line

@@ -85,7 +85,6 @@ const deleteReservation = (req, res) => {
     const indexOfSelectedReservation = reservations.findIndex((reservation) => {
       return reservation.id === req.params.id
     });
-    console.log(indexOfSelectedReservation);
     reservations.splice(indexOfSelectedReservation, 1);
 
     // Set seat availability back to true
@@ -104,7 +103,50 @@ const deleteReservation = (req, res) => {
 };
 
 const updateReservation = async (req, res) => {
-  
+  const updatedReservation = req.body;
+  const {
+    flight,
+    seat,
+    givenName,
+    surname,
+    email,
+  } = updatedReservation;
+  updatedReservation.id = req.params.id;
+
+  const selectedReservation = (reservations.find((reservation) => {
+    return reservation.id === req.params.id
+  }))
+
+  if (selectedReservation) {
+    // Remove old reservation
+    const indexOfSelectedReservation = reservations.findIndex((reservation) => {
+      return reservation.id === req.params.id
+    });
+    reservations.splice(indexOfSelectedReservation, 1);
+
+    // Set seat availability back to true
+    flights[selectedReservation.flight].some((seat) => {
+      if (seat.id === selectedReservation.seat) {
+        seat.isAvailable = true;
+        return true;
+      }
+    })
+    
+    // Set new seat availability to false
+    flights[updatedReservation.flight].some((seat) => {
+      console.log(updatedReservation.seat)
+      if (seat.id === updatedReservation.seat) {
+        seat.isAvailable = false;
+        return true;
+      }
+    })
+
+    // Push
+    reservations.push(updatedReservation);
+    return res.status(200).json({status: 200, dataRemoved: selectedReservation, dataAdded: updatedReservation, message: "The reservatoin has been successfully updated!"})
+  } else {
+    res.status(400).json({status: 400, message: "Error - The reservation id doesn't exist."})
+  }
 };
 
 module.exports = {
