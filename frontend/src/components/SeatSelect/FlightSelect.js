@@ -7,13 +7,27 @@ const FlightSelect = ({ handleFlightSelect }) => {
   const [flights, setFlights] = useState([]);
 
   useEffect(() => {
-    // TODO: fetch the flight numbers
+    fetch(`/flights`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application.json"
+      }
+    }) 
+    .then((res) => res.json())
+    .then((data) => setFlights(data.flights))
   }, []);
+
+  console.log(flights)
 
   return (
     <Wrapper>
       <label htmlFor="flight">Flight Number :</label>
-      {/* TODO: Create a dropdown from the flight numbers */}
+      <DropdownButton id="flight" onChange={handleFlightSelect}>
+        <DropdownMenuItem value="" disabled selected>Choose a flight:</DropdownMenuItem>
+        {flights.map((flight) => {
+          return <DropdownMenuItem value={flight}>{flight}</DropdownMenuItem>
+        })}
+      </DropdownButton>
     </Wrapper>
   );
 };
@@ -26,5 +40,22 @@ const Wrapper = styled.div`
   padding: ${themeVars.pagePadding};
   margin-bottom: ${themeVars.pagePadding};
 `;
+
+const DropdownButton = styled.select`
+  margin-top: 10px;
+  margin-left: 5px;
+  background-color: transparent;
+  color: white;
+  padding: 10px;
+  font-family: ${themeVars.headingFont};
+  outline: none;
+  border: none;
+  font-size: 14pt;
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const DropdownMenuItem = styled.option``;
 
 export default FlightSelect;
