@@ -18,7 +18,7 @@ const flights = {
     { id: "3D", isAvailable: true },
     { id: "3E", isAvailable: true },
     { id: "3F", isAvailable: true },
-    { id: "4A", isAvailable: true },
+    { id: "4A", isAvailable: false },
     { id: "4B", isAvailable: true },
     { id: "4C", isAvailable: true },
     { id: "4D", isAvailable: false },
@@ -65,12 +65,20 @@ const flights = {
 
 const reservations = [
   {
-    id: "88a33c23-3332-4ef2-bd71-be7a6430485f",
+    id: "88a33c23-3332-4ef2-bd71-be7a6430485d",
     flight: "SA231",
     seat: "4D",
     givenName: "Marty",
     surname: "McFly",
     email: "marty@backfuture.com",
+  },
+  {
+    id: "88a33c23-3332-4ef2-bd71-be7a6430485a",
+    flight: "SA231",
+    seat: "4A",
+    givenName: "Mathieu",
+    surname: "Tranchida",
+    email: "mathieu.tranchida@gmail.com",
   },
 ];
 
