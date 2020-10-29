@@ -12,23 +12,25 @@ const getFlights = (req, res) => {
   return res.status(200).json({status: 200, flights: getAllFlights})
 };
 
-//NEED TO FIGURE THIS OUT
+//DONE
 const getFlight = (req, res) => {
-  // const getAllFlights = Object.entries(flights);
-  // console.log(getAllFlights);
-  const getAllFlights = Object.keys(flights);
   const selectedFlight = req.params.id;
 
-  console.log(selectedFlight);
-
-  if (getAllFlights == selectedFlight) {
-    return res.status(200).json({status: 200, seating: Object.values(flights)})
+  if (flights[selectedFlight]) {
+    // USE ON FRONTEND
+    // seatObjects = {};
+    // flights[selectedFlight].forEach((seat) => {
+    //   seatObjects[seat.id] = seat;
+    // });
+    return res.status(200).json({status: 200, seating: flights[selectedFlight]})
   } else {
     return res.status(400).json({status: 400, message: "Error - The flight ID provided doesn't exist in our database."})
   }
 };
 
+// DONE
 const addReservations = (req, res) => {
+  // Add a new reservation
   const newReservation = req.body;
   const {
     flight,
@@ -38,17 +40,27 @@ const addReservations = (req, res) => {
     email,
   } = newReservation;
   newReservation.id = uuidv4();
-  // MODIFY THE SEAT TAKEN HERE
+
+  // Change the seat availability to false
+  flights[newReservation.flight].some((seat) => {
+    console.log(newReservation.seat)
+    if (seat.id === newReservation.seat) {
+      seat.isAvailable = false;
+      return true;
+    }
+  })
+
+  // Push the reservation to the server and return
   reservations.push(newReservation);
   return res.status(201).json({status: 201, data: newReservation, message: "Your reservation has been successful."})
 };
 
-//DONE
+// DONE
 const getReservations = (req, res) => {
   return res.status(200).json({status: 200, reservations: reservations})
 };
 
-//DONE
+// DONE
 const getSingleReservation = (req, res) => {
   const selectedReservation = (reservations.find((reservation) => {
     return req.params.id === reservation.id
@@ -60,23 +72,39 @@ const getSingleReservation = (req, res) => {
   }
 };
 
+// DONE
 const deleteReservation = (req, res) => {
+  // Find the reservation
   const selectedReservation = (reservations.find((reservation) => {
     return reservation.id === req.params.id
   }))
+  console.log(selectedReservation);
   if (selectedReservation) {
-    //ADD FUNCTIONALITY TO REMOVE FROM DB
-    // const indexOfSelectedReservation = reservations.findIndex(selectedReservation);
-    // reservations.splice(indexOfSelectedReservation, 1);
-    //ADD FUNCTIONALITY TO REMOVE SEAT FROM DB
+
+    // Remove reservation from database
+    const indexOfSelectedReservation = reservations.findIndex((reservation) => {
+      return reservation.id === req.params.id
+    });
+    console.log(indexOfSelectedReservation);
+    reservations.splice(indexOfSelectedReservation, 1);
+
+    // Set seat availability back to true
+    flights[selectedReservation.flight].some((seat) => {
+      if (seat.id === selectedReservation.seat) {
+        seat.isAvailable = true;
+        return true;
+      }
+    })
+
+    // Main return of server
     res.status(200).json({status: 200, data: selectedReservation, message: "The reservation has been deleted."})
   } else {
-    res.status(200).json({status: 200, message: "Error - The reservation ID is not valid."})
+    res.status(400).json({status: 400, message: "Error - The reservation ID is not valid."})
   }
 };
 
-const updateReservation = (req, res) => {
-  //DO THIS
+const updateReservation = async (req, res) => {
+  
 };
 
 module.exports = {
