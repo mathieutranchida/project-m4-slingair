@@ -34,7 +34,7 @@ express()
   .get("/flights", getFlights)
 
   // Retrieve a single flight
-  .get("/flight/:id", getFlight)
+  .get("/flights/:id", getFlight)
 
   // Add a reservations
   .post("/reserve", addReservations)

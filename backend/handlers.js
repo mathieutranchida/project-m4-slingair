@@ -9,6 +9,7 @@ const { flights, reservations } = require("./data");
 //DONE
 const getFlights = (req, res) => {
   const getAllFlights = Object.keys(flights);
+  console.log(getAllFlights);
   return res.status(200).json({status: 200, flights: getAllFlights})
 };
 
@@ -43,9 +44,8 @@ const addReservations = (req, res) => {
 
   // Change the seat availability to false
   flights[newReservation.flight].some((seat) => {
-    console.log(newReservation.seat)
     if (seat.id === newReservation.seat) {
-      seat.isAvailable = false;
+      seat.isAvailable = false; 
       return true;
     }
   })
