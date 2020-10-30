@@ -7,15 +7,17 @@ import slingairLogo from "../assets/logo_text.png";
 
 const Header = () => (
   <Wrapper>
-    <Logo>
+    <Logo href="/">
       <h1>Sling Airlines</h1>
     </Logo>
     <Nav>
-      {/* TODO: only show links if the user has a reservation already */}
+      {/* Works fine when the server starts but then when it is loaded for the first time, it doesn't work anymore because the localStorage is already in use. Will comme back to it if I have time. */}
+      {localStorage.reservationID && (
       <>
-        <StyledNavLink to="/view-reservation">Reservation</StyledNavLink>
-        <StyledNavLink to="/profile">Profile</StyledNavLink>
+      <StyledNavLink to="/view-reservation">Reservation</StyledNavLink>
+      <StyledNavLink to="/profile">Profile</StyledNavLink>
       </>
+      )}
     </Nav>
   </Wrapper>
 );
@@ -27,7 +29,7 @@ const Wrapper = styled.header`
   height: 110px;
   padding: ${themeVars.pagePadding} 18px;
 `;
-const Logo = styled.div`
+const Logo = styled.a`
   background-image: url(${slingairLogo});
   background-repeat: no-repeat;
   background-position: left center, right center;

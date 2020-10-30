@@ -15,6 +15,7 @@ const SeatSelect = ({ updateUserReservation }) => {
   useEffect(() => {
     // This hook is listening to state changes and verifying whether or not all
     // of the form data is filled out.
+    
     Object.values(formData).includes("") || flightNumber === ""
       ? setDisabled(true)
       : setDisabled(false);
@@ -22,6 +23,7 @@ const SeatSelect = ({ updateUserReservation }) => {
 
   const handleFlightSelect = (ev) => {
     setFlightNumber(ev.target.value);
+    setFormData({...formData, flight: ev.target.value})
   };
 
   const handleSeatSelect = (seatId) => {
@@ -43,10 +45,34 @@ const SeatSelect = ({ updateUserReservation }) => {
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
+    console.log(formData);
+    console.log(validateEmail());
     if (validateEmail()) {
-      // TODO: Send data to the server for validation/submission
-      // TODO: if 201, add reservation id (received from server) to localStorage
-      // TODO: if 201, redirect to /confirmed (push)
+      // Send data to the server for validation/submission
+      setSubStatus("pending");
+      fetch(`/reserve`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+      .then((res) => {
+        return res.json()})
+      .then((json) => {
+        let reservationID = json.data.id;
+        const {status, error} = json;
+        if (status == 201) {
+          setSubStatus("confirmed");
+          // TODO: if 201, add reservation id (received from server) to localStorage
+          localStorage.setItem("reservationID", reservationID);
+          // TODO: if 201, redirect to /confirmed (push)
+          history.push("/confirmed");
+        } else if (error) {
+          setSubStatus("error");
+        }
+      })
       // TODO: if error from server, show error to user (stretch goal)
     }
   };

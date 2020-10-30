@@ -17,13 +17,11 @@ const FlightSelect = ({ handleFlightSelect }) => {
     .then((data) => setFlights(data.flights))
   }, []);
 
-  console.log(flights)
-
   return (
     <Wrapper>
       <label htmlFor="flight">Flight Number :</label>
-      <DropdownButton id="flight" onChange={handleFlightSelect}>
-        <DropdownMenuItem value="" disabled selected>Choose a flight:</DropdownMenuItem>
+      <DropdownButton id="flight" onChange={handleFlightSelect} defaultValue="Choose">
+        <DropdownMenuItem value="Choose" disabled>Choose a flight:</DropdownMenuItem>
         {flights.map((flight) => {
           return <DropdownMenuItem value={flight}>{flight}</DropdownMenuItem>
         })}
